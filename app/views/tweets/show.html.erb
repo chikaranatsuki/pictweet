@@ -11,14 +11,15 @@
             <%= link_to '削除', tweet_path(@tweet.id), method: :delete %>
           </li>
         </ul>
-      </div>
-    <% end %>
+      <% end %>
+     </div>
     <p><%= @tweet.text %></p>
       <span class="name">
         <a href="/users/<%= @tweet.user.id %>">
-          </span>投稿者</span><%= @tweet.user.name %>
+          <span>投稿者</span><%= @tweet.user.name %>
         </a>
       </span>
+    </div>
   </div>
   <div class="container">
     <% if user_signed_in? %>

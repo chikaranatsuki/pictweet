@@ -1,8 +1,8 @@
 class TweetsController < ApplicationController
-  before_action :set_tweet, only: [:edit, :show]
-  before_action :move_to_index, except: [:index, :show, :search]
+  before_action :set_tweet, only: %i[edit show]
+  before_action :move_to_index, except: %i[index show search]
   def index
-    @tweets = Tweet.includes(:user).order("created_at DESC")
+    @tweets = Tweet.includes(:user).order('created_at DESC')
   end
 
   def new
@@ -10,7 +10,13 @@ class TweetsController < ApplicationController
   end
 
   def create
-    tweet = Tweet.create(tweet_params)
+    @tweet = Tweet.new(tweet_params)
+    if @tweet.valid?
+      @tweet.save
+      redirect_to root_path
+    else
+      render 'new'
+    end
   end
 
   def destroy
@@ -18,8 +24,7 @@ class TweetsController < ApplicationController
     tweet.destroy
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     tweet = Tweet.find(params[:id])
@@ -36,6 +41,7 @@ class TweetsController < ApplicationController
   end
 
   private
+
   def tweet_params
     params.require(:tweet).permit(:text, :image).merge(user_id: current_user.id)
   end
@@ -45,9 +51,6 @@ class TweetsController < ApplicationController
   end
 
   def move_to_index
-    unless user_signed_in?
-      redirect_to action: :index
-    end
+    redirect_to action: :index unless user_signed_in?
   end
-
 end
